@@ -1,7 +1,7 @@
 from collections import Counter
 
 PRICES = {"A": 50, "B": 30, "C": 20}
-OFFERS = {"A": (3, 130)}
+OFFERS = {"A": (3, 130), "B": (2, 45)}
 
 
 class UnknownSKU(Exception):

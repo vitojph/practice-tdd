@@ -46,3 +46,22 @@ def test_offers_work_in_any_order(cart):
 def test_unk_sku_raises_exception(cart):
     with pytest.raises(UnknownSKU, match="Product does not exist"):
         cart.scan("X")
+
+
+@pytest.mark.parametrize(
+    "items, expected",
+    [
+        ("", 0),
+        ("A", 50),
+        ("AB", 80),
+        ("AAA", 130),
+        ("AAAA", 180),
+        ("BB", 45),
+        ("ABAAB", 175),
+    ],
+)
+def test_totals(items, expected):
+    cart = Cart()
+    for sku in items:
+        cart.scan(sku)
+    assert cart.total == expected
