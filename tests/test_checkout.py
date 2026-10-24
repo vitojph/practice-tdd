@@ -1,6 +1,6 @@
 import pytest
 
-from checkout import Cart
+from checkout import Cart, UnknownSKU
 
 
 @pytest.fixture
@@ -27,3 +27,22 @@ def test_threeA_get_offer(cart):
     for _ in range(3):
         cart.scan("A")
     assert cart.total == 130
+
+
+def test_fourA_totals_180(cart):
+    for _ in range(4):
+        cart.scan("A")
+    assert cart.total == 180
+
+
+def test_offers_work_in_any_order(cart):
+    cart.scan("A")
+    cart.scan("B")
+    cart.scan("A")
+    cart.scan("A")
+    assert cart.total == 160
+
+
+def test_unk_sku_raises_exception(cart):
+    with pytest.raises(UnknownSKU, match="Product does not exist"):
+        cart.scan("X")
