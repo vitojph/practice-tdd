@@ -32,19 +32,25 @@ def test_12_amount_sums_to_input(use_case):
     assert amount.amount == sum([m.amount for m in res])
 
 
-@pytest.mark.skip
-def test_usd100_first_4_months_get_extra_cent():
-    pass
+def test_usd100_first_4_months_get_extra_cent(use_case):
+    amount = dollars(100)
+    res = use_case.execute(amount)
+    assert res[:4] == [res[-1] + Money.from_sub_units(1, Currency.USD)] * 4
+    assert res[4:] == [res[-1]] * 8
 
 
-@pytest.mark.skip
-def test_usd001_only_month_1_is_non_zero():
-    pass
+def test_usd001_only_month_1_is_non_zero(use_case):
+    amount = Money.from_sub_units(1, Currency.USD)
+    res = use_case.execute(amount)
+    assert res[0].amount > 0
+    assert res[1:] == [dollars(0)] * 11
 
 
-@pytest.mark.skip
-def test_currency_is_preserved():
-    pass
+def test_currency_is_preserved(use_case):
+    amount = dollars(100)
+    res = use_case.execute(amount)
+    for m in res:
+        assert m.currency == amount.currency
 
 
 @pytest.mark.skip
