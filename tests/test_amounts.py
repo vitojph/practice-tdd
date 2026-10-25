@@ -61,9 +61,11 @@ def test_currency_is_preserved(use_case, amount, currency):
     assert res == [Money(str(amount / 12), currency)] * 12
 
 
-@pytest.mark.skip
-def test_jpy10_dont_asume_100_subunits():
-    pass
+def test_jpy10_dont_asume_100_subunits(use_case):
+    amount = Money("10", Currency.JPY)
+    res = use_case.execute(amount)
+    assert res[:10] == [Money("1", Currency.JPY)] * 10
+    assert res[10:] == [Money("0", Currency.JPY)] * 2
 
 
 @pytest.mark.skip
