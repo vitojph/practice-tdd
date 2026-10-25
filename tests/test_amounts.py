@@ -46,11 +46,19 @@ def test_usd001_only_month_1_is_non_zero(use_case):
     assert res[1:] == [dollars(0)] * 11
 
 
-def test_currency_is_preserved(use_case):
-    amount = dollars(100)
-    res = use_case.execute(amount)
-    for m in res:
-        assert m.currency == amount.currency
+@pytest.mark.parametrize(
+    "amount, currency",
+    [
+        (120, Currency.USD),
+        (240, Currency.EUR),
+        (360, Currency.MXN),
+        (480, Currency.JPY),
+    ],
+)
+def test_currency_is_preserved(use_case, amount, currency):
+    money = Money(str(amount), currency)
+    res = use_case.execute(money)
+    assert res == [Money(str(amount / 12), currency)] * 12
 
 
 @pytest.mark.skip
